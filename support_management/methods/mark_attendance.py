@@ -2,9 +2,42 @@ import frappe
 from frappe import NotFound
 
 
-@frappe.whitelist()
-def mark_checkin():
+def set_attendance_data(**kwargs):
+    data = kwargs.get('data')
+    photo = data.get('photo')
+    image = photo.get('file_url')
+    custom_customer = data.get('custom_customer') if data.get('custom_customer') else ''
+    custom_call_type = data.get('custom_call_type') if data.get('custom_call_type') else ''
+    custom_work_status = data.get('custom_work_status') if data.get('custom_work_status') else ''
+    custom_comments = data.get('custom_comments') if data.get('custom_comments') else ''
+    custom_documents_array = data.get('custom_documents') if data.get('custom_documents') else []
+    custom_documents_obj = custom_documents_array[0] if len(custom_documents_array) > 0 else {}
+    custom_documents = custom_documents_obj.get('file_url') if custom_documents_obj.get('file_url') else ''
+
     user = frappe.session.user
+    employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
+    if not employee:
+        raise frappe.NotFound("Employee not found")
+    attendance = frappe.db.get_value("Attendance",
+                                     {"employee": employee.get('name'), "attendance_date": frappe.utils.today()})
+    if attendance:
+        attendance = frappe.get_doc("Attendance", attendance)
+        attendance.custom_photo = image
+        attendance.custom_customer = custom_customer
+        attendance.custom_call_type = custom_call_type
+        attendance.custom_work_status = custom_work_status.capitalize()
+        attendance.custom_comments = custom_comments
+        attendance.custom_documents = custom_documents
+        attendance.save(ignore_permissions=True)
+        return True
+    return False
+
+@frappe.whitelist()
+def mark_checkin(**kwargs):
+    user = frappe.session.user
+    data = kwargs.get('data')
+    photo = data.get('photo')
+    image = photo.get('file_url')
     datetime = frappe.utils.now_datetime()
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
     if not employee:
@@ -13,6 +46,7 @@ def mark_checkin():
     attendance_doc.employee = employee.get('name')
     attendance_doc.attendance_date = frappe.utils.today()
     attendance_doc.in_time = datetime
+    attendance_doc.custom_photo_checkin = image
     attendance_doc.insert(ignore_permissions=True)
 
     checkin_doc = frappe.new_doc('Employee Checkin')
@@ -24,29 +58,31 @@ def mark_checkin():
     return attendance_doc.name
 
 @frappe.whitelist()
-def mark_checkout():
-    datetime = frappe.utils.now_datetime()
-    user = frappe.session.user
-    employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
-    if not employee:
-        raise NotFound("Employee not found")
-    attendance_doc = frappe.db.get_value("Attendance",
-                                         {"employee": employee.get('name'), "attendance_date": frappe.utils.today()})
-    if not attendance_doc:
-        raise NotFound("Attendance not found")
-    checkout_doc = frappe.new_doc('Employee Checkin')
-    checkout_doc.employee = employee.get('name')
-    checkout_doc.time = datetime
-    checkout_doc.log_type = "OUT"
-    checkout_doc.attendance = attendance_doc
-    checkout_doc.insert(ignore_permissions=True)
+def mark_checkout(**kwargs):
+    if (set_attendance_data(**kwargs)):
+        datetime = frappe.utils.now_datetime()
+        user = frappe.session.user
+        employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
+        if not employee:
+            raise NotFound("Employee not found")
+        attendance_doc = frappe.db.get_value("Attendance",
+                                             {"employee": employee.get('name'), "attendance_date": frappe.utils.today()})
+        if not attendance_doc:
+            raise NotFound("Attendance not found")
+        checkout_doc = frappe.new_doc('Employee Checkin')
+        checkout_doc.employee = employee.get('name')
+        checkout_doc.time = datetime
+        checkout_doc.log_type = "OUT"
+        checkout_doc.attendance = attendance_doc
+        checkout_doc.insert(ignore_permissions=True)
 
-    attendance_doc = frappe.get_doc("Attendance", attendance_doc)
-    attendance_doc.out_time = datetime
-    #     print(attendance_doc.out_time)
-    #     attendance_doc.custom_duration = attendance_doc.out_time - attendance_doc.in_time
-    attendance_doc.submit()
-    return attendance_doc.name
+        attendance_doc = frappe.get_doc("Attendance", attendance_doc)
+        attendance_doc.out_time = datetime
+        attendance_doc.custom_duration = attendance_doc.out_time - attendance_doc.in_time
+        attendance_doc.submit()
+        return attendance_doc.name
+    else:
+        raise NotFound("Attendance not found")
 
 
 @frappe.whitelist()
@@ -99,3 +135,4 @@ def validate_face(**kwargs):
         raise frappe.ValidationError("Face not matched")
     else:
         raise frappe.ValidationError("No face detected")
+
