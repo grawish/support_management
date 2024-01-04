@@ -136,3 +136,12 @@ def validate_face(**kwargs):
     else:
         raise frappe.ValidationError("No face detected")
 
+@frappe.whitelist()
+def has_face_enrolled():
+    user = frappe.session.user
+    person = frappe.get_value("Person", {"user": user}, ["enrolled"], as_dict=True)
+    if not person:
+        return False
+    if person.enrolled:
+        return True
+    return False
