@@ -1,12 +1,6 @@
 frappe.ui.form.on("Maintenance Visit", {
   refresh: (frm) => {
-    frm.add_custom_button(__("Create Invoice"), () => {
-      frappe.model.open_mapped_doc({
-        method:
-          "support_management.support_management.doctype.engineer_visit.engineer_visit.create_invoice",
-        frm: frm,
-      });
-    });
+   
   },
   custom_assigned_engineer: (frm) => {
     // frm.set_query("custom_additional_engineer", ()=>{
