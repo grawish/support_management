@@ -1,3 +1,3 @@
 if (window.isApp) {
-    location.href = '/mobile'
+    // location.href = '/mobile'
 }
