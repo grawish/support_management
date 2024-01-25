@@ -2,7 +2,7 @@ import frappe
 
 
 @frappe.whitelist()
-def before_save(doc, method):
+def on_update(doc, method):
     from frappe.desk.form import assign_to
 
     if doc.custom_assigned_engineer:
