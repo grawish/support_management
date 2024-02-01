@@ -33,7 +33,7 @@ doctype_js = {
 "Item": "public/js/item.js",
 "Maintenance Visit": "public/js/maintenance_visit.js"
 }
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_list_js = {"Item" : "public/js/item_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -137,6 +137,7 @@ doc_events = {
         "before_insert": "support_management.support_management.doc_events.item.before_insert"
     },
     "Maintenance Visit": {
+        "before_save": "support_management.support_management.doc_events.engineer_visit.before_save",
         "on_update": "support_management.support_management.doc_events.engineer_visit.on_update"
     }
 #     "Attendance": {

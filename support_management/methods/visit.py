@@ -20,6 +20,7 @@ def create_serial_no(serial_no, item_code, customer, warranty_period):
     serial.serial_no = serial_no
     serial.item_code = item_code
     serial.status = "Delivered"
+    serial.custom_warranty_start_date = frappe.utils.now()
     serial.custom_customer_code = customer
     serial.insert(ignore_permissions=True)
     serial.warranty_expiry_date = frappe.utils.add_to_date(
@@ -115,7 +116,7 @@ def checkin_visit():
         "visit",
         "custom_checkin_photo",
         "custom_customer_actual_location",
-    ]  # add geolocation later on
+    ]
     if not all(p in kwargs for p in required_params):
         missing_params = [p for p in required_params if not kwargs.get(p)]
         raise frappe.ValidationError("Missing parameters:", missing_params)
@@ -233,7 +234,7 @@ def create_visit(visit):
         return
     new_visit = frappe.new_doc("Maintenance Visit")
     new_visit.customer = old_visit.customer
-    
+
     new_date = frappe.utils.add_to_date(
         str(old_visit.mntc_date) + " " + str(old_visit.mntc_time), days=1
     )
@@ -247,5 +248,6 @@ def create_visit(visit):
     new_visit.custom_reason_for_additional_engineer = (
         old_visit.custom_reason_for_additional_engineer
     )
+    new_visit.custom_parent_service_call = old_visit.custom_parent_service_call
     new_visit.save(ignore_permissions=True)
     return new_visit

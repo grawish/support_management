@@ -4,6 +4,7 @@ frappe.ui.form.on("Warranty Claim", {
     frm.remove_custom_button(__("Engineer Visit"));
     if (!frm.doc.__islocal) {
       frm.add_custom_button(__("Create Engineer Visit"), () => {
+
         frappe.model.open_mapped_doc({
           method:
             "support_management.support_management.doctype.service_call.service_call.create_engineer_visit",

@@ -1,6 +1,6 @@
 frappe.ui.form.on("Item", {
-    refresh: (frm) => {
-
+    refresh(frm) {
+        frm.set_df_property('name', 'visibility', 'hidden');
     },
     custom_division_code: (frm) => {
         frm.doc.item_code = (frm?.doc?.custom_division_code ?? '') + "/" + (frm?.doc?.custom_segment_code ?? '') + "/" + (frm?.doc?.custom_manufacturer_code ?? '') + "/" + (frm?.doc?.custom_product_type_code ?? '')

@@ -6,7 +6,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "engineer_visit"
+  "engineer_visit",
+  "hours",
+  "date_of_visit"
  ],
  "fields": [
   {
@@ -14,13 +16,30 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Engineer Visit",
-   "options": "Maintenance Visit"
+   "options": "Maintenance Visit",
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "engineer_visit.custom_visit_hours",
+   "fieldname": "hours",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hours"
+  },
+  {
+   "fetch_from": "engineer_visit.mntc_date",
+   "fieldname": "date_of_visit",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date of Visit",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-23 18:47:19.160516",
+ "modified": "2024-01-30 18:11:07.369885",
  "modified_by": "Administrator",
  "module": "Support Management",
  "name": "Engineer Visits",
