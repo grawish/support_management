@@ -1,0 +1,59 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-02-01 18:34:40.572183",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "part_code",
+  "part_name",
+  "part_price",
+  "part_image"
+ ],
+ "fields": [
+  {
+   "fieldname": "part_code",
+   "fieldtype": "Data",
+   "label": "Part Code"
+  },
+  {
+   "fieldname": "part_name",
+   "fieldtype": "Data",
+   "label": "Part Name"
+  },
+  {
+   "fieldname": "part_price",
+   "fieldtype": "Currency",
+   "label": "Part Price"
+  },
+  {
+   "fieldname": "part_image",
+   "fieldtype": "Attach Image",
+   "label": "Part Image"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-02-01 18:35:36.706420",
+ "modified_by": "Administrator",
+ "module": "Support Management",
+ "name": "Spare Parts",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
