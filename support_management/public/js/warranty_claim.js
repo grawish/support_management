@@ -76,4 +76,5 @@ frappe.ui.form.on("Warranty Claim", {
       });
     });
   },
+
 });

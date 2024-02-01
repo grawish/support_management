@@ -3,10 +3,9 @@ from frappe.utils import time_diff_in_hours
 
 @frappe.whitelist()
 def before_save(doc, method):
-    if doc.custom_checkin_time > doc.custom_checkout_time:
-        frappe.throw("Checkin time cannot be greater than checkout time")
-
     if doc.custom_checkin_time and doc.custom_checkout_time:
+        if doc.custom_checkin_time > doc.custom_checkout_time:
+            frappe.throw("Checkin time cannot be greater than checkout time")
         doc.custom_visit_hours = time_diff_in_hours(doc.custom_checkout_time, doc.custom_checkin_time)
 
 @frappe.whitelist()

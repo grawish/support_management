@@ -132,6 +132,7 @@ doc_events = {
     },
     "Warranty Claim": {
         "validate": "support_management.support_management.doc_events.warranty_claim.validate",
+        "before_save": "support_management.support_management.doc_events.warranty_claim.before_save"
     },
     "Item": {
         "before_insert": "support_management.support_management.doc_events.item.before_insert"
