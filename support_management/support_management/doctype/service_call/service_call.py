@@ -9,7 +9,6 @@ def create_engineer_visit(source_name, target_doc=None):
         target_doc.prevdoc_doctype = source_parent.doctype
         target_doc.prevdoc_docname = source_parent.name
 
-
     target_doc = get_mapped_doc(
 			"Warranty Claim",
 			source_name,
