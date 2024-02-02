@@ -4,7 +4,7 @@ const calculateCharges = (frm) => {
 
 frappe.ui.form.on("Maintenance Visit", {
   refresh: (frm) => {
-
+calculateCharges(frm)
   },
   custom_assigned_engineer: (frm) => {
     // frm.set_query("custom_additional_engineer", ()=>{

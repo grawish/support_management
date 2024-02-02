@@ -14,21 +14,22 @@ def on_update(doc, method):
 
     if doc.custom_parent_service_call:
         warranty_claim = frappe.get_doc("Warranty Claim", doc.custom_parent_service_call)
+        valid = True
         if warranty_claim.custom_visits:
-            valid = True
             for child_visit in warranty_claim.custom_visits:
                 if child_visit.engineer_visit == doc.name:
                     child_doc = frappe.get_doc("Engineer Visits", child_visit.name)
                     child_doc.date_of_visit = doc.mntc_date
                     child_doc.hours = doc.custom_visit_hours
+                    child_doc.custom_total_expenses = doc.custom_total_expenses
                     child_doc.save(ignore_permissions=True)
                     valid = False
                     break
-            if valid:
-                child_visit = frappe.new_doc("Engineer Visits")
-                child_visit.engineer_visit = doc.name
-                warranty_claim.custom_visits.append(child_visit)
-                warranty_claim.save(ignore_permissions=True)
+        if valid:
+            child_visit = frappe.new_doc("Engineer Visits")
+            child_visit.engineer_visit = doc.name
+            warranty_claim.custom_visits.append(child_visit)
+        warranty_claim.save(ignore_permissions=True)
 
     if doc.custom_assigned_engineer:
         assign_to.add(

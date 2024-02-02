@@ -131,12 +131,11 @@ doc_events = {
         "before_submit": "support_management.support_management.doc_events.installation_note.before_submit"
     },
     "Warranty Claim": {
-        "validate": "support_management.support_management.doc_events.warranty_claim.validate",
-        "before_save": "support_management.support_management.doc_events.warranty_claim.before_save"
+        "before_save": "support_management.support_management.doc_events.warranty_claim.on_update"
     },
     "Item": {
-        # "before_insert": "support_management.support_management.doc_events.item.before_insert",
-        # "on_update": "support_management.support_management.doc_events.item.on_update"
+        "before_insert": "support_management.support_management.doc_events.item.before_insert",
+        "before_save": "support_management.support_management.doc_events.item.before_save"
     },
     "Maintenance Visit": {
         "before_save": "support_management.support_management.doc_events.engineer_visit.before_save",
