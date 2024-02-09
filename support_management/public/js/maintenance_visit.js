@@ -1,10 +1,5 @@
-const calculateCharges = (frm) => {
-  frm.set_value("custom_total_expenses", frm.doc.custom_service_charges + frm.doc.custom_travelling_expenses + frm.doc.custom_local_conveyance + frm.doc.custom_accomodation_expenses)
-}
-
 frappe.ui.form.on("Maintenance Visit", {
   refresh: (frm) => {
-calculateCharges(frm)
   },
   custom_assigned_engineer: (frm) => {
     // frm.set_query("custom_additional_engineer", ()=>{
@@ -15,10 +10,6 @@ calculateCharges(frm)
     //     }
     // })
   },
-  custom_service_charges: calculateCharges,
-  custom_travelling_expenses: calculateCharges,
-  custom_local_conveyance: calculateCharges,
-  custom_accomodation_expenses: calculateCharges,
   warranty_amc_status: (frm) => {
     if (
       !["Under Warranty", "Under AMC"].includes(frm.doc.warranty_amc_status)

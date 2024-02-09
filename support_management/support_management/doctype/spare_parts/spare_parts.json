@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:{part_code}",
  "creation": "2024-02-01 18:34:40.572183",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -34,10 +35,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-01 18:35:36.706420",
+ "modified": "2024-02-07 17:16:44.544538",
  "modified_by": "Administrator",
  "module": "Support Management",
  "name": "Spare Parts",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

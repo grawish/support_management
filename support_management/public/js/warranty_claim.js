@@ -15,20 +15,6 @@ frappe.ui.form.on("Warranty Claim", {
     }
   },
 
-  // serial_no: async (frm) => {
-  //   // if (frm.doc.serial_no) {
-  //   //   const customer = JSON.parse(
-  //   //     JSON.stringify(
-  //   //       await frappe.db.get_value(
-  //   //         "Serial No",
-  //   //         frm.doc.serial_no,
-  //   //         "custom_customer_code"
-  //   //       )
-  //   //     )
-  //   //   ).message.custom_customer_code;
-  //   //   frm.set_value("customer", customer)
-  //   // }
-  // },
   customer: (frm) => {
     if(frm.doc.customer && frm.doc.custom_segment){
         frm.set_query("serial_no", ()=>{

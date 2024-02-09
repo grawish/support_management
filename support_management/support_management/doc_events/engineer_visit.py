@@ -30,7 +30,7 @@ def on_update(doc, method):
                     child_doc = frappe.get_doc("Engineer Visits", child_visit.name)
                     child_doc.date_of_visit = doc.mntc_date
                     child_doc.hours = doc.custom_visit_hours
-                    child_doc.custom_total_expenses = doc.custom_total_expenses
+                    child_doc.custom_total_expenses = doc.custom_service_charges
                     child_doc.save(ignore_permissions=True)
                     valid = False
                     break

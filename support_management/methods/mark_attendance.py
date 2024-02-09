@@ -1,5 +1,6 @@
 import frappe
 from frappe import NotFound
+from frappe.utils import getdate
 
 
 def set_attendance_data(**kwargs):
@@ -58,31 +59,29 @@ def mark_checkin(**kwargs):
     return attendance_doc.name
 
 @frappe.whitelist()
-def mark_checkout(**kwargs):
-    if (set_attendance_data(**kwargs)):
-        datetime = frappe.utils.now_datetime()
-        user = frappe.session.user
-        employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
-        if not employee:
-            raise NotFound("Employee not found")
-        attendance_doc = frappe.db.get_value("Attendance",
-                                             {"employee": employee.get('name'), "attendance_date": frappe.utils.today()})
-        if not attendance_doc:
-            raise NotFound("Attendance not found")
-        checkout_doc = frappe.new_doc('Employee Checkin')
-        checkout_doc.employee = employee.get('name')
-        checkout_doc.time = datetime
-        checkout_doc.log_type = "OUT"
-        checkout_doc.attendance = attendance_doc
-        checkout_doc.insert(ignore_permissions=True)
-
-        attendance_doc = frappe.get_doc("Attendance", attendance_doc)
-        attendance_doc.out_time = datetime
-        attendance_doc.custom_duration = attendance_doc.out_time - attendance_doc.in_time
-        attendance_doc.submit()
-        return attendance_doc.name
-    else:
+def mark_checkout():
+    datetime = frappe.utils.now_datetime()
+    user = frappe.session.user
+    employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
+    if not employee:
+        raise NotFound("Employee not found")
+    attendance_doc = frappe.db.get_value("Attendance",
+                                         {"employee": employee.get('name'), "attendance_date": frappe.utils.today()})
+    if not attendance_doc:
         raise NotFound("Attendance not found")
+    checkout_doc = frappe.new_doc('Employee Checkin')
+    checkout_doc.employee = employee.get('name')
+    checkout_doc.time = datetime
+    checkout_doc.log_type = "OUT"
+    checkout_doc.attendance = attendance_doc
+    checkout_doc.insert(ignore_permissions=True)
+
+    attendance_doc = frappe.get_doc("Attendance", attendance_doc)
+    attendance_doc.out_time = datetime
+    duration = (getdate(attendance_doc.out_time) - getdate(attendance_doc.in_time)).total_seconds()
+    attendance_doc.custom_duration = duration
+    attendance_doc.submit()
+    return attendance_doc.name
 
 
 @frappe.whitelist()
