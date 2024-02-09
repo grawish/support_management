@@ -13,11 +13,13 @@ def generate_next_number(names, prefix):
 @frappe.whitelist()
 def before_insert(doc, method):
     _list = frappe.get_list("Item")
-    name_list = [item["name"] for item in _list]
-    if not doc.item_code:
-        doc.item_code = generate_next_number(name_list, doc.custom_division_code+"/"+doc.custom_segment_code+"/"+doc.custom_Manufacturer_code+"/"+doc.custom_product_type_code)
-    else:
-        doc.item_code = generate_next_number(name_list, doc.item_code)
+    settings = frappe.get_doc("Suba Settings")
+    if not settings.disable_item_name_gen:
+        name_list = [item["name"] for item in _list]
+        if not doc.item_code:
+            doc.item_code = generate_next_number(name_list, doc.custom_division_code+"/"+doc.custom_segment_code+"/"+doc.custom_Manufacturer_code+"/"+doc.custom_product_type_code)
+        else:
+            doc.item_code = generate_next_number(name_list, doc.item_code)
 
 @frappe.whitelist()
 def before_save(doc, method):

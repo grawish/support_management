@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-02-09 13:05:37.710438",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "disable_item_name_gen"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "disable_item_name_gen",
+   "fieldtype": "Check",
+   "label": "Disable Auto Name Generation for Items"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-02-09 13:06:38.781305",
+ "modified_by": "Administrator",
+ "module": "Support Management",
+ "name": "Suba Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
