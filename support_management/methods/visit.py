@@ -188,12 +188,15 @@ def checkout_visit():
             visit.purposes[i].work_done = (
                 item.get("work_done") if item.get("work_done") else ""
             )
-            visit.purposes[i].serial_no = create_serial_no(
-                item.get("serial_no"),
-                visit.purposes[i].item_code,
-                visit.customer,
-                visit.purposes[i].custom_warranty_period_in_days,
-            )
+            if item.get('custom_is_installation'):
+                visit.purposes[i].serial_no = create_serial_no(
+                    item.get("serial_no"),
+                    visit.purposes[i].item_code,
+                    visit.customer,
+                    visit.purposes[i].custom_warranty_period_in_days,
+                )
+            else:
+                visit.purposes[i].serial_no = item.get("serial_no")
             visit.purposes[i].custom_description_of_issue = (
                 item.get("custom_description_of_issue")
                 if item.get("custom_description_of_issue")
@@ -218,11 +221,13 @@ def checkout_visit():
     visit.custom_checkout_time = frappe.utils.now()
     visit.completion_status = kwargs.get("completion_status")
     if kwargs.get("completion_status") == "Fully Completed":
-        if not visit.custom_customer_signature:
+        if not kwargs.get('signature'):
             raise frappe.ValidationError("Customer Signature is required")
-        visit.custom_customer_signature = kwargs.get("custom_customer_signature")
+        visit.custom_signature = kwargs.get("custom_signature")
         visit.customer_feedback = kwargs.get("customer_feedback")
+        visit.custom_feedback_for_engineer = kwargs.get("custom_feedback_for_engineer")
     visit.save(ignore_permissions=True)
+    visit.submit(ignore_permissions=True)
     if visit.completion_status not in ["Fully Completed", "Customer Delay"]:
         return create_visit(visit.name)
     return visit

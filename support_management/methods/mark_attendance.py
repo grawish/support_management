@@ -80,6 +80,7 @@ def mark_checkout():
     attendance_doc.out_time = datetime
     duration = (getdate(attendance_doc.out_time) - getdate(attendance_doc.in_time)).total_seconds()
     attendance_doc.custom_duration = duration
+    attendance_doc.save(ignore_permissions=True)
     attendance_doc.submit()
     return attendance_doc.name
 
