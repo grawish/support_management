@@ -9,7 +9,6 @@ def before_save(doc, method):
         cot = doc.custom_checkout_time
         str_type = type("sample")
         if(type(doc.custom_checkin_time) == str_type):
-            print('print')
             cit = datetime.strptime(doc.custom_checkin_time, '%Y-%m-%d %H:%M:%S')
         if (type(doc.custom_checkout_time) == str_type):
             cot = datetime.strptime(doc.custom_checkout_time, '%Y-%m-%d %H:%M:%S')
