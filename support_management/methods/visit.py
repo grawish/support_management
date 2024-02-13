@@ -33,7 +33,6 @@ def create_serial_no(serial_no, item_code, customer, warranty_period):
 def validate_installation_items(items, visit):
     installation_fields = ["serial_no"]
     non_installation_fields = [
-        "custom_description_of_issue",
         "custom_is_machine_breakdown",
     ]
     common_fields = ["name", "work_done"]
@@ -133,10 +132,11 @@ def checkin_visit():
         raise frappe.ValidationError("Engineer Visit is already resolved or closed")
     # if visit.completion_status == "Under Progress":
     # raise frappe.ValidationError("Engineer Visit is already checked-in")
-    visit.custom_checkin_time = frappe.utils.now()
+    visit.custom_checkin_time = datetime.strftime(frappe.utils.get_datetime(frappe.utils.now()), "%Y-%m-%d %H:%M:%S")
     visit.completion_status = "Under Progress"
     visit.custom_checkin_photo = kwargs.get("custom_checkin_photo")
-    location = '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {},"geometry": {"type": "Point","coordinates": '+kwargs.get("custom_customer_actual_location")+' } } ]}'
+    location = '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {},"geometry": {"type": "Point","coordinates": ' + kwargs.get(
+        "custom_customer_actual_location") + ' } } ]}'
     visit.custom_customer_actual_location = location
     visit.save(ignore_permissions=True)
     return visit
@@ -174,6 +174,7 @@ def checkout_visit():
 
     # item_status is an list of required items
     items = kwargs.get("item_status")
+    spares = kwargs.get("custom_spare_requirements")
     if len(items) != len(visit.purposes):
         raise frappe.ValidationError(
             "Missing items reqd:", len(visit.purposes), "got", len(items)
@@ -185,6 +186,7 @@ def checkout_visit():
 
     try:
         for i, item in enumerate(items):
+            print(item)
             visit.purposes[i].work_done = (
                 item.get("work_done") if item.get("work_done") else ""
             )
@@ -197,11 +199,7 @@ def checkout_visit():
                 )
             else:
                 visit.purposes[i].serial_no = item.get("serial_no")
-            visit.purposes[i].custom_description_of_issue = (
-                item.get("custom_description_of_issue")
-                if item.get("custom_description_of_issue")
-                else ""
-            )
+
             visit.purposes[i].custom_is_machine_breakdown = (
                 item.get("custom_is_machine_breakdown")
                 if item.get("custom_is_machine_breakdown")
@@ -218,7 +216,26 @@ def checkout_visit():
     except frappe.ValidationError as e:
         raise frappe.ValidationError(e)
 
-    visit.custom_checkout_time = frappe.utils.now()
+    try:
+        visit.custom_spare_requirements = []
+        count = 0
+        for i, spare in enumerate(spares):
+            # check if the spare exists
+            doc = frappe.new_doc("Spare Requirements")
+            doc.part = (spare.get("part") if spare.get("part") else "")
+            doc.qty = (spare.get("qty") if spare.get("qty") else "")
+            doc.required_to_change = (
+                spare.get("required_to_change") if spare.get("required_to_change") else ""
+            )
+            doc.stock = (spare.get("stock") if spare.get("stock") else 0)
+            doc.image = (spare.get("image") if spare.get("image") else "")
+            visit.custom_spare_requirements.append(doc)
+
+
+    except frappe.ValidationError as e:
+        raise frappe.ValidationError(e)
+
+    visit.custom_checkout_time = datetime.strftime(frappe.utils.get_datetime(frappe.utils.now()), "%Y-%m-%d %H:%M:%S")
     visit.completion_status = kwargs.get("completion_status")
     if kwargs.get("completion_status") == "Fully Completed":
         if not kwargs.get('signature'):
@@ -226,8 +243,10 @@ def checkout_visit():
         visit.custom_signature = kwargs.get("custom_signature")
         visit.customer_feedback = kwargs.get("customer_feedback")
         visit.custom_feedback_for_engineer = kwargs.get("custom_feedback_for_engineer")
+        visit.maintenance_schedule = None
+        visit.maintenance_schedule_details = None
     visit.save(ignore_permissions=True)
-    visit.submit(ignore_permissions=True)
+    # visit.submit()
     if visit.completion_status not in ["Fully Completed", "Customer Delay"]:
         return create_visit(visit.name)
     return visit
