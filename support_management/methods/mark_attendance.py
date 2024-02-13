@@ -89,6 +89,7 @@ def mark_checkout():
 def has_employee_checked_in_today():
     user = frappe.session.user
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
+    print(user)
     if not employee:
         raise frappe.NotFound("Employee not found")
     attendance = frappe.db.get_value("Attendance",
@@ -119,7 +120,7 @@ def validate_face(**kwargs):
     photo = frappe.get_doc("Photo", {'photo': image})
     people_array = photo.people
     if not photo.is_processed:
-        raise frappe.ValidationError("Photo is not processed yet")
+        raise frappe.ValidationError("Photo is not processed yet, Kindly Re-Click on submit in a few seconds")
     if not people_array:
         raise frappe.ValidationError("No face detected")
     if len(people_array) > 0:
