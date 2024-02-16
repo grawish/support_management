@@ -265,7 +265,7 @@
    "description": null,
    "docstatus": 0,
    "dt": "Serial No",
-   "fetch_from": "item_code.custom_segment",
+   "fetch_from": "item_code.item_name",
    "fetch_if_empty": 0,
    "fieldname": "custom_segment",
    "fieldtype": "Link",
