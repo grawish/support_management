@@ -20,7 +20,3 @@ def before_insert(doc, method):
             doc.item_code = generate_next_number(name_list, doc.custom_division_code+"/"+doc.custom_segment_code+"/"+doc.custom_Manufacturer_code+"/"+doc.custom_product_type_code)
         else:
             doc.item_code = generate_next_number(name_list, doc.item_code)
-
-@frappe.whitelist()
-def before_save(doc, method):
-    doc.item_name = doc.custom_segment
