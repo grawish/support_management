@@ -135,7 +135,6 @@ doc_events = {
     },
     "Item": {
         "before_insert": "support_management.support_management.doc_events.item.before_insert",
-        "before_save": "support_management.support_management.doc_events.item.before_save"
     },
     "Maintenance Visit": {
         "on_update": "support_management.support_management.doc_events.engineer_visit.on_update"
