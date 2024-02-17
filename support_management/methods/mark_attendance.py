@@ -146,3 +146,10 @@ def has_face_enrolled():
     if person.enrolled:
         return True
     return False
+
+@frappe.whitelist()
+def is_photo_processed(image):
+    photo = frappe.get_doc("Photo", {'photo': image})
+    if photo.is_processed:
+        return True
+    return False
