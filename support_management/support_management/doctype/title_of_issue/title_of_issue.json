@@ -1,27 +1,27 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-02-20 22:30:14.891577",
+ "creation": "2024-02-21 01:38:34.615585",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "details"
+  "title"
  ],
  "fields": [
   {
-   "fieldname": "details",
+   "fieldname": "title",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Details",
+   "label": "Title",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-20 23:55:14.625621",
+ "modified": "2024-02-21 01:39:23.478153",
  "modified_by": "Administrator",
  "module": "Support Management",
- "name": "Detailed Support Issue",
+ "name": "Title Of Issue",
  "owner": "Administrator",
  "permissions": [
   {
@@ -41,5 +41,5 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "details"
+ "title_field": "title"
 }

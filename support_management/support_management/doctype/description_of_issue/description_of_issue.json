@@ -12,12 +12,14 @@
   {
    "fieldname": "issue_name",
    "fieldtype": "Data",
-   "label": "Issue Name"
+   "in_list_view": 1,
+   "label": "Issue Name",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-18 13:47:34.403219",
+ "modified": "2024-02-21 01:39:51.362188",
  "modified_by": "Administrator",
  "module": "Support Management",
  "name": "Description of Issue",
