@@ -10,13 +10,15 @@
  "fields": [
   {
    "fieldname": "details",
-   "fieldtype": "Long Text",
-   "label": "Details"
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Details",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-20 22:31:16.871855",
+ "modified": "2024-02-20 23:55:14.625621",
  "modified_by": "Administrator",
  "module": "Support Management",
  "name": "Detailed Support Issue",
@@ -35,6 +37,7 @@
    "write": 1
   }
  ],
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
