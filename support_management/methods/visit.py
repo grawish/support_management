@@ -238,7 +238,7 @@ def checkout_visit():
     visit.custom_checkout_time = datetime.strftime(frappe.utils.get_datetime(frappe.utils.now()), "%Y-%m-%d %H:%M:%S")
     visit.completion_status = kwargs.get("completion_status")
     if kwargs.get("completion_status") == "Fully Completed":
-        if not kwargs.get('signature'):
+        if not kwargs.get('custom_customer_signature'):
             raise frappe.ValidationError("Customer Signature is required")
         visit.custom_signature = kwargs.get("custom_signature")
         visit.customer_feedback = kwargs.get("customer_feedback")
