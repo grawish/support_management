@@ -113,17 +113,17 @@ def checkin_visit():
     kwargs = json.loads(frappe.request.data)
     required_params = [
         "visit",
-        "custom_checkin_photo",
+        # "custom_checkin_photo",
         "custom_customer_actual_location",
     ]
     if not all(p in kwargs for p in required_params):
         missing_params = [p for p in required_params if not kwargs.get(p)]
         raise frappe.ValidationError("Missing parameters:", missing_params)
 
-    try:
-        face_validation(kwargs.get("custom_checkin_photo"))
-    except frappe.ValidationError as e:
-        raise frappe.ValidationError(e)
+    # try:
+    #     face_validation(kwargs.get("custom_checkin_photo"))
+    # except frappe.ValidationError as e:
+    #     raise frappe.ValidationError(e)
 
     visit = frappe.get_doc("Maintenance Visit", kwargs.get("visit"))
     if not visit:

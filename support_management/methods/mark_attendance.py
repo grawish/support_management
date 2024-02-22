@@ -36,9 +36,9 @@ def set_attendance_data(**kwargs):
 @frappe.whitelist()
 def mark_checkin(**kwargs):
     user = frappe.session.user
-    data = kwargs.get('data')
-    photo = data.get('photo')
-    image = photo.get('file_url')
+    # data = kwargs.get('data')
+    # photo = data.get('photo')
+    # image = photo.get('file_url')
     datetime = frappe.utils.now_datetime()
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
     if not employee:
@@ -47,7 +47,7 @@ def mark_checkin(**kwargs):
     attendance_doc.employee = employee.get('name')
     attendance_doc.attendance_date = frappe.utils.today()
     attendance_doc.in_time = datetime
-    attendance_doc.custom_photo_checkin = image
+    # attendance_doc.custom_photo_checkin = image
     attendance_doc.insert(ignore_permissions=True)
 
     checkin_doc = frappe.new_doc('Employee Checkin')
