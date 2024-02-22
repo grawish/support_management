@@ -17,7 +17,7 @@
    "description": null,
    "docstatus": 0,
    "dt": "Engineer Visits",
-   "fetch_from": null,
+   "fetch_from": "engineer_visit.completion_status",
    "fetch_if_empty": 0,
    "fieldname": "custom_completion_status",
    "fieldtype": "Select",

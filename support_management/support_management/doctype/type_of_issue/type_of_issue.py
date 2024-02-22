@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class TitleOfIssue(Document):
+class TypeOfIssue(Document):
 	pass
