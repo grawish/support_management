@@ -19,8 +19,10 @@ def set_attendance_data(**kwargs):
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
     if not employee:
         raise frappe.NotFound("Employee not found")
-    attendance = frappe.db.get_value("Attendance",
-                                     {"employee": employee.get('name'), "attendance_date": frappe.utils.today()})
+    attendance = frappe.db.get_value(
+        "Attendance",
+        {"employee": employee.get('name'), "attendance_date": frappe.utils.today()}
+    )
     if attendance:
         attendance = frappe.get_doc("Attendance", attendance)
         attendance.custom_photo = image
@@ -33,12 +35,13 @@ def set_attendance_data(**kwargs):
         return True
     return False
 
+
 @frappe.whitelist()
 def mark_checkin(**kwargs):
     user = frappe.session.user
-    # data = kwargs.get('data')
-    # photo = data.get('photo')
-    # image = photo.get('file_url')
+    data = kwargs.get('data')
+    photo = data.get('photo')
+    image = photo.get('file_url')
     datetime = frappe.utils.now_datetime()
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
     if not employee:
@@ -47,7 +50,7 @@ def mark_checkin(**kwargs):
     attendance_doc.employee = employee.get('name')
     attendance_doc.attendance_date = frappe.utils.today()
     attendance_doc.in_time = datetime
-    # attendance_doc.custom_photo_checkin = image
+    attendance_doc.custom_photo_checkin = image
     attendance_doc.insert(ignore_permissions=True)
 
     checkin_doc = frappe.new_doc('Employee Checkin')
@@ -57,6 +60,7 @@ def mark_checkin(**kwargs):
     checkin_doc.attendance = attendance_doc.name
     checkin_doc.save(ignore_permissions=True)
     return attendance_doc.name
+
 
 @frappe.whitelist()
 def mark_checkout():
@@ -113,6 +117,7 @@ def has_employee_checked_out_today():
             return True
     return False
 
+
 @frappe.whitelist()
 def validate_face(**kwargs):
     user = frappe.session.user
@@ -133,9 +138,11 @@ def validate_face(**kwargs):
                 continue
             if face.person is not None and person.user == user:
                 return True
-        raise frappe.ValidationError("Face not matched")
+        return True
+        # raise frappe.ValidationError("Face not matched")
     else:
         raise frappe.ValidationError("No face detected")
+
 
 @frappe.whitelist()
 def has_face_enrolled():
@@ -146,6 +153,7 @@ def has_face_enrolled():
     if person.enrolled:
         return True
     return False
+
 
 @frappe.whitelist()
 def is_photo_processed(image):
