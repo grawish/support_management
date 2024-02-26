@@ -56,6 +56,7 @@ def mark_checkin(**kwargs):
     checkin_doc = frappe.new_doc('Employee Checkin')
     checkin_doc.employee = employee.get('name')
     checkin_doc.time = datetime
+    checkin_doc.custom_checkin_type = "In Office"
     checkin_doc.log_type = "IN"
     checkin_doc.attendance = attendance_doc.name
     checkin_doc.save(ignore_permissions=True)
@@ -76,6 +77,7 @@ def mark_checkout():
     checkout_doc = frappe.new_doc('Employee Checkin')
     checkout_doc.employee = employee.get('name')
     checkout_doc.time = datetime
+    checkout_doc.custom_checkin_type = "In Office"
     checkout_doc.log_type = "OUT"
     checkout_doc.attendance = attendance_doc
     checkout_doc.insert(ignore_permissions=True)

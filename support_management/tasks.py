@@ -5,6 +5,7 @@ def create_checkin(user, checkin_datetime):
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
     checkin.employee = employee.get('name')
     checkin.time = checkin_datetime
+    checkin.custom_checkin_type = "On Site"
     checkin.log_type = "IN"
     checkin.save()
     return checkin
@@ -14,6 +15,7 @@ def create_checkout(user, checkout_datetime):
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
     checkout.employee = employee.get('name')
     checkout.time = checkout_datetime
+    checkout.custom_checkin_type = "On Site"
     checkout.log_type = "OUT"
     checkout.save()
     return checkout

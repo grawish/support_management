@@ -136,7 +136,9 @@ def checkin_visit():
     # raise frappe.ValidationError("Engineer Visit is already checked-in")
     visit.custom_checkin_time = datetime.strftime(frappe.utils.get_datetime(frappe.utils.now()), "%Y-%m-%d %H:%M:%S")
     visit.completion_status = "Under Progress"
-    visit.custom_checkin_photo = kwargs.get("custom_checkin_photo")
+    checkin_photo = frappe.get_doc("File", kwargs.get("custom_checkin_photo"))
+    visit.custom_checkin_photo = checkin_photo.file_url
+    visit.custom_checkin_by = frappe.session.user
     location = '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {},"geometry": {"type": "Point","coordinates": ' + kwargs.get(
         "custom_customer_actual_location") + ' } } ]}'
     visit.custom_customer_actual_location = location
@@ -239,6 +241,7 @@ def checkout_visit():
 
     visit.custom_checkout_time = datetime.strftime(frappe.utils.get_datetime(frappe.utils.now()), "%Y-%m-%d %H:%M:%S")
     visit.completion_status = kwargs.get("completion_status")
+    visit.custom_checkout_by = user
     if kwargs.get("completion_status") == "Fully Completed":
         if not kwargs.get('custom_customer_signature'):
             raise frappe.ValidationError("Customer Signature is required")

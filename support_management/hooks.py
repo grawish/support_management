@@ -153,13 +153,13 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"support_management.tasks.all"
 # 	],
-# 	"daily": [
-# 		"support_management.tasks.daily"
-# 	],
+	"daily": [
+		"support_management.tasks.daily"
+	]
 # 	"hourly": [
 # 		"support_management.tasks.hourly"
 # 	],
@@ -169,7 +169,7 @@ doc_events = {
 # 	"monthly": [
 # 		"support_management.tasks.monthly"
 # 	],
-# }
+}
 
 # Testing
 # -------
