@@ -8,7 +8,9 @@
  "field_order": [
   "engineer_visit",
   "hours",
-  "date_of_visit"
+  "date_of_visit",
+  "total_expenses",
+  "completion_status"
  ],
  "fields": [
   {
@@ -34,12 +36,27 @@
    "in_list_view": 1,
    "label": "Date of Visit",
    "read_only": 1
+  },
+  {
+   "fetch_from": "engineer_visit.custom_service_charges",
+   "fieldname": "total_expenses",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Expenses"
+  },
+  {
+   "fetch_from": "engineer_visit.completion_status",
+   "fieldname": "completion_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Completion Status",
+   "options": "\nNot Started Yet\nUnder Progress\nPartially Completed\nFully Completed\nCustomer Delay\nOEM Advice\nSpares Requirements"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-30 18:11:07.369885",
+ "modified": "2024-02-26 14:25:08.606984",
  "modified_by": "Administrator",
  "module": "Support Management",
  "name": "Engineer Visits",

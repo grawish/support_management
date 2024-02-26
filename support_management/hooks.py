@@ -131,12 +131,13 @@ doc_events = {
         "before_submit": "support_management.support_management.doc_events.installation_note.before_submit"
     },
     "Warranty Claim": {
-        "before_save": "support_management.support_management.doc_events.warranty_claim.on_update"
+        "before_save": "support_management.support_management.doc_events.warranty_claim.before_save"
     },
     "Item": {
         "before_insert": "support_management.support_management.doc_events.item.before_insert",
     },
     "Maintenance Visit": {
+        "before_save": "support_management.support_management.doc_events.engineer_visit.before_save",
         "on_update": "support_management.support_management.doc_events.engineer_visit.on_update"
     }
 #     "Attendance": {
