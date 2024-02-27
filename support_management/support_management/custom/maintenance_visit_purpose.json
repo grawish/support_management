@@ -35,7 +35,7 @@
    "insert_after": "custom_warranty__amc_status",
    "is_system_generated": 0,
    "is_virtual": 0,
-   "label": "Machine Count",
+   "label": "Total Machine Count",
    "length": 0,
    "mandatory_depends_on": null,
    "modified": "2024-02-15 17:54:40.062911",
