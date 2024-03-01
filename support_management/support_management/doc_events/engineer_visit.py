@@ -91,8 +91,57 @@ def on_update(doc, method):
             assign_to.remove("Maintenance Visit", doc.name, i.get('owner'))
 
     # # send email here
-    # email_string = f'''
-    # <div class="ql-editor read-mode"><p>Dear Spares Team,</p><p><br></p><p><br></p><p>Please find below the spares enquiry . Do share the Quote to the client accordingly.</p><p>Engineer Name : {doc.custom_assigned_engineer_name}</p><p><br></p><p><br></p><p><strong><u>Client Details:</u></strong></p><p>Customer Name:</p><p>Company Code:</p><p>Address:</p><p>Contact Name</p><p>Contact Phone No.</p><p>Customer email</p><p><br></p><p><br></p><p><strong><u>Machine Details:</u></strong></p><p>Machine Name: </p><p>Model No.</p><p>Serial No.</p><p><br></p><p><br></p><p>Machine Breakdown: </p><p><br></p><p><br></p></div>
-    # '''
-    # frappe.sendmail('goblinsanger@gmail.com', 'grawish@hybrowlabs.com', 'Maintenance visit updated',
-    #                 '<h1>Maintainance Visit</h1>', False, now=True)
+    rows = ''
+
+    for i in range(len(doc.custom_spare_requirements)):
+        rows += f'''
+<tr>
+        <td>{i+1}</td>
+        <td>{doc.custom_spare_requirements[i].part}</td>
+        <td>{doc.custom_spare_requirements[i].qty}</td>
+        <td><img src="{doc.custom_spare_requirements[i].image}" /></td>
+      </tr>
+'''
+
+    email_string = f'''
+<div class="ql-editor read-mode">
+  <p>Dear Spares Team,</p>
+  <p><br></p>
+  <p><br></p>
+  <p>Please find below the spares enquiry . Do share the Quote to the client accordingly.</p>
+  <p>Engineer Name : {doc.custom_assigned_engineer_name}</p>
+  <p><br></p>
+  <p><br></p>
+  <p><strong><u>Client Details:</u></strong></p>
+  <p>Customer Name: {doc.customer}</p>
+  <p>Company Code: {doc.company}</p>
+  <p>Address: {doc.address_display}</p>
+  <p>Contact Name: {doc.customer}</p>
+  <p>Contact Phone No. : {doc.contact_mobile}</p>
+  <p>Customer email: {doc.contact_email}</p>
+  <p><br></p>
+  <p><br></p>
+  <p><strong><u>Machine Details:</u></strong></p>
+  <p>Machine Name: {doc.purposes[0].item_name}</p>
+  <p>Model No.: {doc.purposes[0].item_code}</p>
+  <p>Serial No.: {doc.purposes[0].serial_no}</p>
+  <p><br></p>
+  <p><br></p>
+  <p>Machine Breakdown: {doc.purposes[0].custom_is_machine_breakdown}</p>
+  <p><br></p>
+  <p><br></p>
+  <table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th><strong>S no.</strong></th>
+            <th><strong>Part Name</strong></th>
+            <th><strong>Quantity</strong></th>
+            <th><strong>Picture</strong></th>
+        </tr>
+        {rows}
+    </tbody>
+  </table> 
+</div>
+    '''
+    frappe.sendmail('goblinsanger@gmail.com', 'grawish@hybrowlabs.com', 'Maintenance visit updated',
+                    email_string, False, now=True)
