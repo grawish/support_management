@@ -1,5 +1,6 @@
 import frappe
 
+
 def create_checkin(user, checkin_datetime):
     checkin = frappe.new_doc("Employee Checkin")
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
@@ -10,6 +11,7 @@ def create_checkin(user, checkin_datetime):
     checkin.save()
     return checkin
 
+
 def create_checkout(user, checkout_datetime):
     checkout = frappe.new_doc("Employee Checkin")
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
@@ -19,6 +21,7 @@ def create_checkout(user, checkout_datetime):
     checkout.log_type = "OUT"
     checkout.save()
     return checkout
+
 
 def create_attendance(user, checkin, checkout):
     attendance = frappe.new_doc("Attendance")
@@ -40,24 +43,24 @@ def daily():
     from frappe.utils import get_datetime
     from_date = get_datetime(frappe.utils.today() + " 00:00:00")
     to_date = get_datetime(frappe.utils.today() + " 23:59:59")
-    engineerVisits = frappe.get_all("Maintenance Visit", filters=[["Maintenance Visit", "custom_checkin_time", "between", [from_date, to_date]], ["Maintenance Visit", "custom_assigned_engineer", "!=", ""],["Maintenance Visit", "custom_checkout_time", "!=", None]], fields=["*"])
-
+    engineerVisits = frappe.get_all("Maintenance Visit", filters=[
+        ["Maintenance Visit", "custom_checkin_time", "between", [from_date, to_date]],
+        ["Maintenance Visit", "custom_assigned_engineer", "!=", ""],
+        ["Maintenance Visit", "custom_checkout_time", "!=", None]], fields=["*"])
 
     persons = dict()
 
     for engineerVisit in engineerVisits:
-        if(engineerVisit.custom_assigned_engineer):
-            if(engineerVisit.custom_assigned_engineer in persons):
+        if (engineerVisit.custom_assigned_engineer):
+            if (engineerVisit.custom_assigned_engineer in persons):
                 persons[engineerVisit.custom_assigned_engineer].append(engineerVisit)
             else:
                 persons[engineerVisit.custom_assigned_engineer] = [engineerVisit]
-        if(engineerVisit.custom_additional_engineer):
-            if(engineerVisit.custom_additional_engineer in persons):
+        if (engineerVisit.custom_additional_engineer):
+            if (engineerVisit.custom_additional_engineer in persons):
                 persons[engineerVisit.custom_additional_engineer].append(engineerVisit)
             else:
                 persons[engineerVisit.custom_additional_engineer] = [engineerVisit]
-
-
 
     for person in persons.keys():
         checkin_dates = [x.custom_checkin_time for x in persons[person]]
@@ -66,3 +69,27 @@ def daily():
         checkout = create_checkout(person, max(checkout_dates))
         create_attendance(person, checkin, checkout)
 
+    mark_absents()
+
+
+def mark_absents():
+    try:
+        employee_list = frappe.db.get_all("Employee", ["name", "user_id"])
+        for emp in employee_list:
+            frappe.logger("utils").exception(emp)
+            if not frappe.db.exists("Attendance",
+                                    {"attendance_date": frappe.utils.today(), "employee": emp.get("name")}):
+                att_doc = frappe.new_doc("Attendance")
+                att_doc.update({
+                    "employee": emp.get("name"),
+                    "owner": emp.get("user_id") if emp.get("user_id") else "Administrator",
+                    "status": "Absent",
+                    "attendance_date": frappe.utils.today(),
+                })
+                att_doc.save(ignore_permissions=True)
+                att_doc.submit()
+                owner = emp.get("user_id") if emp.get("user_id") else "Administrator"
+                frappe.db.set_value("Attendance", att_doc.name, 'owner', owner)
+                frappe.db.set_value("Attendance", att_doc.name, 'modified_by', owner)
+    except Exception as e:
+        frappe.logger("utils").exception(e)

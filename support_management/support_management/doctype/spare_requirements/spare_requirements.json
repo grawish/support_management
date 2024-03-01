@@ -8,16 +8,14 @@
   "part",
   "qty",
   "required_to_change",
-  "stock",
   "image"
  ],
  "fields": [
   {
    "fieldname": "part",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Part",
-   "options": "Spare Parts"
+   "label": "Part"
   },
   {
    "fieldname": "qty",
@@ -27,15 +25,10 @@
   },
   {
    "fieldname": "required_to_change",
-   "fieldtype": "Data",
+   "fieldtype": "Select",
    "in_list_view": 1,
-   "label": "Required to Change"
-  },
-  {
-   "fieldname": "stock",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Stock"
+   "label": "Required to Change",
+   "options": "Yes\nStock"
   },
   {
    "fetch_from": "part.part_image",
@@ -47,7 +40,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-01 18:48:25.833647",
+ "modified": "2024-02-29 15:55:37.369613",
  "modified_by": "Administrator",
  "module": "Support Management",
  "name": "Spare Requirements",

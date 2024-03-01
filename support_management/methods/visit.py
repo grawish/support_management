@@ -162,7 +162,7 @@ def checkout_visit():
     if visit.completion_status == "Fully Completed":
         raise frappe.ValidationError("Engineer Visit is already resolved or closed")
     if kwargs.get("completion_status") not in [
-        "Partially Completed",
+        "In Progress",
         "Fully Completed",
         "Customer Delay",
         "OEM Advice",
@@ -242,10 +242,12 @@ def checkout_visit():
     visit.custom_checkout_time = datetime.strftime(frappe.utils.get_datetime(frappe.utils.now()), "%Y-%m-%d %H:%M:%S")
     visit.completion_status = kwargs.get("completion_status")
     visit.custom_checkout_by = user
+    visit.custom_is_spare_requirements = kwargs.get("custom_is_spare_requirements")
     if kwargs.get("completion_status") == "Fully Completed":
         if not kwargs.get('custom_customer_signature'):
             raise frappe.ValidationError("Customer Signature is required")
         visit.custom_signature = kwargs.get("custom_signature")
+        visit.custom_engineer_signature = kwargs.get("custom_engineer_signature")
         visit.customer_feedback = kwargs.get("customer_feedback")
         visit.custom_feedback_for_engineer = kwargs.get("custom_feedback_for_engineer")
         visit.maintenance_schedule = None
