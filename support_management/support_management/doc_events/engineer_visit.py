@@ -96,10 +96,10 @@ def on_update(doc, method):
     for i in range(len(doc.custom_spare_requirements)):
         rows += f'''
 <tr>
-        <td>{i+1}</td>
+        <td>{i + 1}</td>
         <td>{doc.custom_spare_requirements[i].part}</td>
         <td>{doc.custom_spare_requirements[i].qty}</td>
-        <td><img src="{doc.custom_spare_requirements[i].image}" /></td>
+        <td><img src="https://suba-services-test.frappe.cloud/{doc.custom_spare_requirements[i].image}" /></td>
       </tr>
 '''
 
@@ -143,5 +143,8 @@ def on_update(doc, method):
   </table> 
 </div>
     '''
-    frappe.sendmail('goblinsanger@gmail.com', 'grawish@hybrowlabs.com', 'Maintenance visit updated',
-                    email_string, False, now=True)
+    if not doc.custom_is_spare_requirements_sent and doc.custom_is_spare_requirements:
+        frappe.sendmail('goblinsanger@gmail.com', 'grawish@hybrowlabs.com', 'Maintenance visit updated', email_string,
+                        False, now=True)
+        doc.custom_is_spare_requirements_sent = 1
+        doc.save(ignore_permissions=True)
