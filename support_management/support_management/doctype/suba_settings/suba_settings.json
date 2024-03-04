@@ -5,7 +5,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "disable_item_name_gen"
+  "disable_item_name_gen",
+  "disable_facial_recognition"
  ],
  "fields": [
   {
@@ -13,12 +14,18 @@
    "fieldname": "disable_item_name_gen",
    "fieldtype": "Check",
    "label": "Disable Auto Name Generation for Items"
+  },
+  {
+   "default": "0",
+   "fieldname": "disable_facial_recognition",
+   "fieldtype": "Check",
+   "label": "Disable Facial Recognition"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-02-09 13:06:38.781305",
+ "modified": "2024-03-04 18:31:28.432355",
  "modified_by": "Administrator",
  "module": "Support Management",
  "name": "Suba Settings",

@@ -126,6 +126,8 @@ def validate_face(**kwargs):
     image = kwargs.get('image')
     photo = frappe.get_doc("Photo", {'photo': image})
     people_array = photo.people
+    disable_facial_recognition = frappe.get_doc("Suba Settings", "disable_facial_recognition").disable_facial_recognition
+
     if not photo.is_processed:
         raise frappe.ValidationError("Photo is not processed yet, Kindly Re-Click on submit in a few seconds")
     if not people_array:
@@ -140,8 +142,10 @@ def validate_face(**kwargs):
                 continue
             if face.person is not None and person.user == user:
                 return True
-        # return True
-        raise frappe.ValidationError("Face not matched")
+        if(disable_facial_recognition):
+            return True
+        else:
+            raise frappe.ValidationError("Face not matched")
     else:
         raise frappe.ValidationError("No face detected")
 
