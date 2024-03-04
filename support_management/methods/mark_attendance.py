@@ -140,8 +140,8 @@ def validate_face(**kwargs):
                 continue
             if face.person is not None and person.user == user:
                 return True
-        return True
-        # raise frappe.ValidationError("Face not matched")
+        # return True
+        raise frappe.ValidationError("Face not matched")
     else:
         raise frappe.ValidationError("No face detected")
 

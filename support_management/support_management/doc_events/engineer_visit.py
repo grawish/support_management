@@ -51,6 +51,12 @@ def on_update(doc, method):
             child_visit = frappe.new_doc("Engineer Visits")
             child_visit.engineer_visit = doc.name
             warranty_claim.custom_visits.append(child_visit)
+
+        # append attachments here
+        for i in doc.custom_attachments:
+            new_doc = frappe.new_doc("Engineer Visit Attachments")
+            new_doc.attachment = i.attachment
+            warranty_claim.custom_attachments.append(new_doc)
         warranty_claim.save(ignore_permissions=True)
 
     if doc.custom_assigned_engineer:
@@ -89,6 +95,7 @@ def on_update(doc, method):
     else:
         for i in already_assigned:
             assign_to.remove("Maintenance Visit", doc.name, i.get('owner'))
+
 
     # # send email here
     rows = ''

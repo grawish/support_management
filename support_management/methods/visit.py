@@ -84,8 +84,8 @@ def validate_face(**kwargs):
                 continue
             if face.person is not None and person.user == user:
                 return True
-        return True
-        # raise frappe.ValidationError("Face not matched")
+        # return True
+        raise frappe.ValidationError("Face not matched")
     else:
         raise frappe.ValidationError("No face detected")
 
@@ -132,8 +132,6 @@ def checkin_visit():
         raise frappe.DoesNotExistError("Engineer Visit does not exist")
     if visit.completion_status == "Fully Completed":
         raise frappe.ValidationError("Engineer Visit is already resolved or closed")
-    # if visit.completion_status == "Under Progress":
-    # raise frappe.ValidationError("Engineer Visit is already checked-in")
     visit.custom_checkin_time = datetime.strftime(frappe.utils.get_datetime(frappe.utils.now()), "%Y-%m-%d %H:%M:%S")
     visit.completion_status = "Under Progress"
     checkin_photo = frappe.get_doc("File", kwargs.get("custom_checkin_photo"))
@@ -179,6 +177,7 @@ def checkout_visit():
     # item_status is an list of required items
     items = kwargs.get("item_status")
     spares = kwargs.get("custom_spare_requirements")
+    attachments = kwargs.get("custom_attachments")
     if len(items) != len(visit.purposes):
         raise frappe.ValidationError(
             "Missing items reqd:", len(visit.purposes), "got", len(items)
@@ -222,7 +221,6 @@ def checkout_visit():
 
     try:
         visit.custom_spare_requirements = []
-        count = 0
         for i, spare in enumerate(spares):
             # check if the spare exists
             doc = frappe.new_doc("Spare Requirements")
@@ -235,6 +233,17 @@ def checkout_visit():
             doc.image = (spare.get("image") if spare.get("image") else "")
             visit.custom_spare_requirements.append(doc)
 
+
+    except frappe.ValidationError as e:
+        raise frappe.ValidationError(e)
+
+    try:
+
+        visit.custom_attachments = []
+        for i, attachment in enumerate(attachments):
+            doc = frappe.new_doc("Engineer Visit Attachments")
+            doc.attachment = (attachment.get("attachment") if attachment.get("attachment") else "")
+            visit.custom_attachments.append(doc)
 
     except frappe.ValidationError as e:
         raise frappe.ValidationError(e)
