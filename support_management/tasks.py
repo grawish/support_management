@@ -78,13 +78,13 @@ def mark_absents():
         for emp in employee_list:
             frappe.logger("utils").exception(emp)
             if not frappe.db.exists("Attendance",
-                                    {"attendance_date": frappe.utils.today(), "employee": emp.get("name")}):
+                                    {"attendance_date": frappe.utils.add_to_date(frappe.utils.today(), days=-1), "employee": emp.get("name")}):
                 att_doc = frappe.new_doc("Attendance")
                 att_doc.update({
                     "employee": emp.get("name"),
                     "owner": emp.get("user_id") if emp.get("user_id") else "Administrator",
                     "status": "Absent",
-                    "attendance_date": frappe.utils.today(),
+                    "attendance_date": frappe.utils.add_to_date(frappe.utils.today(),days=-1),
                 })
                 att_doc.save(ignore_permissions=True)
                 att_doc.submit()
