@@ -7,8 +7,11 @@
  "engine": "InnoDB",
  "field_order": [
   "engineer_visit",
+  "engineer_name",
   "hours",
   "date_of_visit",
+  "checkin_time",
+  "checkout_time",
   "total_expenses",
   "completion_status"
  ],
@@ -16,7 +19,6 @@
   {
    "fieldname": "engineer_visit",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Engineer Visit",
    "options": "Maintenance Visit",
    "unique": 1
@@ -27,7 +29,8 @@
    "fieldname": "hours",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Hours"
+   "label": "Hours",
+   "read_only": 1
   },
   {
    "fetch_from": "engineer_visit.mntc_date",
@@ -41,8 +44,8 @@
    "fetch_from": "engineer_visit.custom_service_charges",
    "fieldname": "total_expenses",
    "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Total Expenses"
+   "label": "Total Expenses",
+   "read_only": 1
   },
   {
    "fetch_from": "engineer_visit.completion_status",
@@ -50,13 +53,38 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Completion Status",
-   "options": "\nNot Started Yet\nUnder Progress\nIn Progress\nFully Completed\nCustomer Delay\nOEM Advice\nSpares Requirements"
+   "options": "\nNot Started Yet\nUnder Progress\nIn Progress\nFully Completed\nCustomer Delay\nOEM Advice\nSpares Requirements",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "engineer_visit.custom_assigned_engineer_name",
+   "fieldname": "engineer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Engineer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "engineer_visit.custom_checkin_time",
+   "fieldname": "checkin_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Checkin Time",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "engineer_visit.custom_checkout_time",
+   "fieldname": "checkout_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Checkout Time",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-29 14:58:59.859872",
+ "modified": "2024-03-05 11:47:30.141525",
  "modified_by": "Administrator",
  "module": "Support Management",
  "name": "Engineer Visits",

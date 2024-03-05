@@ -267,7 +267,7 @@ def checkout_visit():
         visit.maintenance_schedule_details = None
     visit.save(ignore_permissions=True)
     # visit.submit()
-    if visit.completion_status not in ["Fully Completed", "Customer Delay"]:
+    if visit.completion_status in ["In Progress"]:
         return create_visit(visit.name)
     return visit
 
