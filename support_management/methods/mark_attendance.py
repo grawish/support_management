@@ -1,5 +1,6 @@
 import frappe
 from frappe import NotFound
+import json
 from frappe.utils import getdate
 
 
@@ -65,6 +66,7 @@ def mark_checkin(**kwargs):
 
 @frappe.whitelist()
 def mark_checkout():
+    kwargs = json.loads(frappe.request.data)
     datetime = frappe.utils.now_datetime()
     user = frappe.session.user
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
@@ -83,6 +85,8 @@ def mark_checkout():
     checkout_doc.insert(ignore_permissions=True)
 
     attendance_doc = frappe.get_doc("Attendance", attendance_doc)
+    print(kwargs)
+    attendance_doc.custom_work_done = kwargs.get("custom_work_done") if kwargs.get("custom_work_done") else None
     attendance_doc.out_time = datetime
     duration = (getdate(attendance_doc.out_time) - getdate(attendance_doc.in_time)).total_seconds()
     attendance_doc.custom_duration = duration
@@ -101,7 +105,9 @@ def has_employee_checked_in_today():
     attendance = frappe.db.get_value("Attendance",
                                      {"employee": employee.get('name'), "attendance_date": frappe.utils.today()})
     if attendance:
-        return True
+        attendance = frappe.get_doc("Attendance", attendance)
+        if attendance.docstatus != 2:
+            return True
     return False
 
 
@@ -115,7 +121,7 @@ def has_employee_checked_out_today():
                                      {"employee": employee.get('name'), "attendance_date": frappe.utils.today()})
     if attendance:
         attendance = frappe.get_doc("Attendance", attendance)
-        if attendance.out_time:
+        if attendance.out_time and attendance.docstatus != 2:
             return True
     return False
 

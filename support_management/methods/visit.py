@@ -151,7 +151,7 @@ def checkin_visit():
 @frappe.whitelist()
 def checkout_visit():
     kwargs = json.loads(frappe.request.data)
-    required_params = ["completion_status", "visit", "item_status"]
+    required_params = ["completion_status", "visit", "item_status","custom_signature","custom_engineer_signature"]
     if not all(p in kwargs for p in required_params):
         missing_params = [p for p in required_params if not kwargs.get(p)]
         raise frappe.ValidationError("Missing parameters:", missing_params)
@@ -255,16 +255,14 @@ def checkout_visit():
     visit.custom_checkout_time = datetime.strftime(frappe.utils.get_datetime(frappe.utils.now()), "%Y-%m-%d %H:%M:%S")
     visit.completion_status = kwargs.get("completion_status")
     visit.custom_checkout_by = user
+    visit.custom_signature = kwargs.get("custom_signature")
+    visit.custom_engineer_signature = kwargs.get("custom_engineer_signature")
     visit.custom_is_spare_requirements = kwargs.get("custom_is_spare_requirements")
     if kwargs.get("completion_status") == "Fully Completed":
-        if not kwargs.get('custom_customer_signature'):
-            raise frappe.ValidationError("Customer Signature is required")
-        visit.custom_signature = kwargs.get("custom_signature")
-        visit.custom_engineer_signature = kwargs.get("custom_engineer_signature")
         visit.customer_feedback = kwargs.get("customer_feedback")
         visit.custom_feedback_for_engineer = kwargs.get("custom_feedback_for_engineer")
-        visit.maintenance_schedule = None
-        visit.maintenance_schedule_details = None
+    visit.maintenance_schedule = None
+    visit.maintenance_schedule_details = None
     visit.save(ignore_permissions=True)
     # visit.submit()
     if visit.completion_status in ["In Progress"]:
