@@ -151,7 +151,7 @@ def checkin_visit():
 @frappe.whitelist()
 def checkout_visit():
     kwargs = json.loads(frappe.request.data)
-    required_params = ["completion_status", "visit", "item_status","custom_signature","custom_engineer_signature"]
+    required_params = ["completion_status", "visit", "item_status"]
     if not all(p in kwargs for p in required_params):
         missing_params = [p for p in required_params if not kwargs.get(p)]
         raise frappe.ValidationError("Missing parameters:", missing_params)
