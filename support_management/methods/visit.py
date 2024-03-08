@@ -193,19 +193,19 @@ def checkout_visit():
 
     try:
         for i, item in enumerate(items):
-            print(item)
             visit.purposes[i].work_done = (
                 item.get("work_done") if item.get("work_done") else ""
             )
-            if item.get('custom_is_installation'):
-                visit.purposes[i].serial_no = create_serial_no(
-                    item.get("serial_no"),
-                    visit.purposes[i].item_code,
-                    visit.customer,
-                    visit.purposes[i].custom_warranty_period_in_days,
-                )
-            else:
-                visit.purposes[i].serial_no = item.get("serial_no")
+            if item.get("serial_no") is not None:
+                if item.get('custom_is_installation'):
+                    visit.purposes[i].serial_no = create_serial_no(
+                        item.get("serial_no"),
+                        visit.purposes[i].item_code,
+                        visit.customer,
+                        visit.purposes[i].custom_warranty_period_in_days,
+                    )
+                else:
+                    visit.purposes[i].serial_no = item.get("serial_no")
 
             visit.purposes[i].custom_is_machine_breakdown = (
                 item.get("custom_is_machine_breakdown")
