@@ -246,7 +246,7 @@ def checkout_visit():
         visit.custom_attachments = []
         for i, attachment in enumerate(attachments):
             doc = frappe.new_doc("Engineer Visit Attachments")
-            doc.attachment = (attachment.get("attachment") if attachment.get("attachment") else "")
+            doc.attachment = (attachment if attachment else "")
             visit.custom_attachments.append(doc)
 
     except frappe.ValidationError as e:
