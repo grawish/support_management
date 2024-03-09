@@ -159,6 +159,10 @@ def validate_face(**kwargs):
 @frappe.whitelist()
 def has_face_enrolled():
     user = frappe.session.user
+    disable_facial_recognition = frappe.get_doc("Suba Settings",
+                                                "disable_facial_recognition").disable_facial_recognition
+    if (disable_facial_recognition):
+        return True
     person = frappe.get_value("Person", {"user": user}, ["enrolled"], as_dict=True)
     if not person:
         return False
