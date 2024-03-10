@@ -88,7 +88,7 @@ def on_update(doc, method):
                     ignore_permissions=True,
                 )
         else:
-            #             check if already assigned contains doc.custom_assigned_engineer if yes then remove all other engineers
+            # check if already assigned contains doc.custom_assigned_engineer if yes then remove all other engineers
             for i in already_assigned:
                 if i.get('owner') != doc.custom_assigned_engineer:
                     assign_to.remove("Maintenance Visit", doc.name, i.get('owner'))
@@ -151,7 +151,8 @@ def on_update(doc, method):
 </div>
     '''
     if not doc.custom_is_spare_requirements_sent and doc.custom_is_spare_requirements:
-        frappe.sendmail('goblinsanger@gmail.com', 'grawish@hybrowlabs.com', 'Maintenance visit updated', email_string,
-                        False, now=True)
+        recipient = frappe.get_single("Suba Settings").recipient_email
+        frappe.sendmail(recipient, sender='', subject='Maintenance visit updated', message=email_string,
+                        as_markdown=False, now=True)
         doc.custom_is_spare_requirements_sent = 1
         doc.save(ignore_permissions=True)

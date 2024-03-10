@@ -6,7 +6,8 @@
  "engine": "InnoDB",
  "field_order": [
   "disable_item_name_gen",
-  "disable_facial_recognition"
+  "disable_facial_recognition",
+  "recipient_email"
  ],
  "fields": [
   {
@@ -20,12 +21,17 @@
    "fieldname": "disable_facial_recognition",
    "fieldtype": "Check",
    "label": "Disable Facial Recognition"
+  },
+  {
+   "fieldname": "recipient_email",
+   "fieldtype": "Data",
+   "label": "Spares Recipient Email"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-03-04 18:31:28.432355",
+ "modified": "2024-03-10 13:59:14.551341",
  "modified_by": "Administrator",
  "module": "Support Management",
  "name": "Suba Settings",
