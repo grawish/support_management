@@ -8,7 +8,7 @@ def create_checkin(user, checkin_datetime):
     checkin.time = checkin_datetime
     checkin.custom_checkin_type = "On Site"
     checkin.log_type = "IN"
-    checkin.save()
+    checkin.save(ignore_permissions=True)
     return checkin
 
 
@@ -19,7 +19,7 @@ def create_checkout(user, checkout_datetime):
     checkout.time = checkout_datetime
     checkout.custom_checkin_type = "On Site"
     checkout.log_type = "OUT"
-    checkout.save()
+    checkout.save(ignore_permissions=True)
     return checkout
 
 
@@ -29,11 +29,11 @@ def create_attendance(user, checkin, checkout):
     attendance.employee = employee.get('name')
     attendance.status = "Present"
     attendance.attendance_date = checkin.time.date()
-    attendance.save()
+    attendance.save(ignore_permissions=True)
     checkin.attendance = attendance
     checkout.attendance = attendance
-    checkin.save()
-    checkout.save()
+    checkin.save(ignore_permissions=True)
+    checkout.save(ignore_permissions=True)
     attendance.submit()
     return attendance
 
@@ -41,26 +41,27 @@ def create_attendance(user, checkin, checkout):
 @frappe.whitelist()
 def daily():
     from frappe.utils import get_datetime
-    from_date = get_datetime(frappe.utils.today() + " 00:00:00")
-    to_date = get_datetime(frappe.utils.today() + " 23:59:59")
-    engineerVisits = frappe.get_all("Maintenance Visit", filters=[
+    from_date = get_datetime(frappe.utils.add_to_date(frappe.utils.today(), days=-1) + " 00:00:00")
+    to_date = get_datetime(frappe.utils.add_to_date(frappe.utils.today(), days=-1) + " 23:59:59")
+    engineer_visits = frappe.get_all("Maintenance Visit", filters=[
         ["Maintenance Visit", "custom_checkin_time", "between", [from_date, to_date]],
         ["Maintenance Visit", "custom_assigned_engineer", "!=", ""],
-        ["Maintenance Visit", "custom_checkout_time", "!=", None]], fields=["*"])
+        ["Maintenance Visit", "custom_checkout_time", "!=", None]
+    ], fields=["*"])
 
     persons = dict()
 
-    for engineerVisit in engineerVisits:
-        if (engineerVisit.custom_assigned_engineer):
-            if (engineerVisit.custom_assigned_engineer in persons):
-                persons[engineerVisit.custom_assigned_engineer].append(engineerVisit)
+    for engineer_visit in engineer_visits:
+        if engineer_visit.custom_assigned_engineer:
+            if engineer_visit.custom_assigned_engineer in persons:
+                persons[engineer_visit.custom_assigned_engineer].append(engineer_visit)
             else:
-                persons[engineerVisit.custom_assigned_engineer] = [engineerVisit]
-        if (engineerVisit.custom_additional_engineer):
-            if (engineerVisit.custom_additional_engineer in persons):
-                persons[engineerVisit.custom_additional_engineer].append(engineerVisit)
+                persons[engineer_visit.custom_assigned_engineer] = [engineer_visit]
+        if engineer_visit.custom_additional_engineer:
+            if engineer_visit.custom_additional_engineer in persons:
+                persons[engineer_visit.custom_additional_engineer].append(engineer_visit)
             else:
-                persons[engineerVisit.custom_additional_engineer] = [engineerVisit]
+                persons[engineer_visit.custom_additional_engineer] = [engineer_visit]
 
     for person in persons.keys():
         checkin_dates = [x.custom_checkin_time for x in persons[person]]
@@ -78,13 +79,14 @@ def mark_absents():
         for emp in employee_list:
             frappe.logger("utils").exception(emp)
             if not frappe.db.exists("Attendance",
-                                    {"attendance_date": frappe.utils.add_to_date(frappe.utils.today(), days=-1), "employee": emp.get("name")}):
+                                    {"attendance_date": frappe.utils.add_to_date(frappe.utils.today(), days=-1),
+                                     "employee": emp.get("name")}):
                 att_doc = frappe.new_doc("Attendance")
                 att_doc.update({
                     "employee": emp.get("name"),
                     "owner": emp.get("user_id") if emp.get("user_id") else "Administrator",
                     "status": "Absent",
-                    "attendance_date": frappe.utils.add_to_date(frappe.utils.today(),days=-1),
+                    "attendance_date": frappe.utils.add_to_date(frappe.utils.today(), days=-1),
                 })
                 att_doc.save(ignore_permissions=True)
                 att_doc.submit()
