@@ -63,6 +63,7 @@ def validate_installation_items(items, visit):
 
         raise frappe.ValidationError(error_message)
 
+
 @frappe.whitelist()
 def validate_face(**kwargs):
     user = frappe.session.user
@@ -70,7 +71,8 @@ def validate_face(**kwargs):
     photo = frappe.get_doc("Photo", {"photo": image})
     people_array = photo.people
 
-    disable_facial_recognition = frappe.get_doc("Suba Settings", "disable_facial_recognition").disable_facial_recognition
+    disable_facial_recognition = frappe.get_doc("Suba Settings",
+                                                "disable_facial_recognition").disable_facial_recognition
 
     if not photo.is_processed:
         raise frappe.ValidationError("Photo is not processed yet")
@@ -86,7 +88,7 @@ def validate_face(**kwargs):
                 continue
             if face.person is not None and person.user == user:
                 return True
-        if(disable_facial_recognition):
+        if (disable_facial_recognition):
             return True
         else:
             raise frappe.ValidationError("Face not matched")
@@ -132,10 +134,31 @@ def checkin_visit():
         raise frappe.ValidationError(e)
 
     visit = frappe.get_doc("Maintenance Visit", kwargs.get("visit"))
+    items = kwargs.get("purposes")
     if not visit:
         raise frappe.DoesNotExistError("Engineer Visit does not exist")
     if visit.completion_status == "Fully Completed":
         raise frappe.ValidationError("Engineer Visit is already resolved or closed")
+    if not visit.custom_parent_service_call:
+        raise frappe.ValidationError("Service Call does not exist")
+
+    service_call = frappe.get_doc("Warranty Claim", visit.custom_parent_service_call)
+    service_call.issue_type = kwargs.get("issue_type")
+    try:
+        for i, item in enumerate(items):
+            visit.purposes[i].custom_is_machine_breakdown = (
+                item.get("custom_is_machine_breakdown")
+                if item.get("custom_is_machine_breakdown")
+                else visit.purposes[i].custom_is_machine_breakdown
+            )
+            visit.purposes[i].description = (
+                item.get("description")
+                if item.get("description")
+                else visit.purposes[i].description
+            )
+    except frappe.ValidationError as e:
+        raise frappe.ValidationError(e)
+
     visit.custom_checkin_time = datetime.strftime(frappe.utils.get_datetime(frappe.utils.now()), "%Y-%m-%d %H:%M:%S")
     visit.completion_status = "Under Progress"
     checkin_photo = frappe.get_doc("File", kwargs.get("custom_checkin_photo"))
@@ -144,6 +167,7 @@ def checkin_visit():
     location = '{"type": "FeatureCollection","features": [{"type": "Feature","properties": {},"geometry": {"type": "Point","coordinates": ' + kwargs.get(
         "custom_customer_actual_location") + ' } } ]}'
     visit.custom_customer_actual_location = location
+    service_call.save(ignore_permissions=True)
     visit.save(ignore_permissions=True)
     return visit
 
