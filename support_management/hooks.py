@@ -150,6 +150,14 @@ doc_events = {
 # 	}
 }
 
+fixtures = [
+  
+    {
+        "doctype": "Print Format",
+        "filters": [["Print Format","module","=","Support Management"]]
+    },
+]
+
 # Scheduled Tasks
 # ---------------
 
