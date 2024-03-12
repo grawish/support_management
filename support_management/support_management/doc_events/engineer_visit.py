@@ -106,7 +106,7 @@ def on_update(doc, method):
         <td>{i + 1}</td>
         <td>{doc.custom_spare_requirements[i].part}</td>
         <td>{doc.custom_spare_requirements[i].qty}</td>
-        <td><img src="https://suba-services-test.frappe.cloud/{doc.custom_spare_requirements[i].image}" /></td>
+        <td><a href="{frappe.get_url()}{doc.custom_spare_requirements[i].image}"/>{frappe.get_url()}{doc.custom_spare_requirements[i].image}</td>
       </tr>
 '''
 
