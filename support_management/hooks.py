@@ -29,11 +29,11 @@ app_include_js = "/assets/support_management/js/support_management.js"
 
 # include js in doctype views
 doctype_js = {
-"Warranty Claim" : "public/js/warranty_claim.js",
-"Item": "public/js/item.js",
-"Maintenance Visit": "public/js/maintenance_visit.js"
+    "Warranty Claim": "public/js/warranty_claim.js",
+    "Item": "public/js/item.js",
+    "Maintenance Visit": "public/js/maintenance_visit.js"
 }
-doctype_list_js = {"Item" : "public/js/item_list.js"}
+doctype_list_js = {"Item": "public/js/item_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -140,14 +140,14 @@ doc_events = {
         "before_save": "support_management.support_management.doc_events.engineer_visit.before_save",
         "on_update": "support_management.support_management.doc_events.engineer_visit.on_update"
     }
-#     "Attendance": {
-#         "before_submit": "support_management.support_management.attendance.validate",
-#     },
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
+    #     "Attendance": {
+    #         "before_submit": "support_management.support_management.attendance.validate",
+    #     },
+    # 	"*": {
+    # 		"on_update": "method",
+    # 		"on_cancel": "method",
+    # 		"on_trash": "method"
+    # 	}
 }
 
 fixtures = [
@@ -162,21 +162,21 @@ fixtures = [
 # ---------------
 
 scheduler_events = {
-# 	"all": [
-# 		"support_management.tasks.all"
-# 	],
-	"daily": [
-		"support_management.tasks.daily"
-	]
-# 	"hourly": [
-# 		"support_management.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"support_management.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"support_management.tasks.monthly"
-# 	],
+    # 	"all": [
+    # 		"support_management.tasks.all"
+    # 	],
+    "cron": {
+        "5 0 * * *": ["support_management.tasks.daily"]
+    }
+    # 	"hourly": [
+    # 		"support_management.tasks.hourly"
+    # 	],
+    # 	"weekly": [
+    # 		"support_management.tasks.weekly"
+    # 	],
+    # 	"monthly": [
+    # 		"support_management.tasks.monthly"
+    # 	],
 }
 
 # Testing
@@ -254,4 +254,3 @@ scheduler_events = {
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
