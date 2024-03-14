@@ -99,4 +99,4 @@ def mark_absents():
 
 @frappe.whitelist()
 def monthly():
-    requests.post("https://webhook.site/1f323885-337c-43cc-8d8b-16b23c924cd5", json={})
+    requests.post("https://webhook.site/1f323885-337c-43cc-8d8b-16b23c924cd5", json={"url": frappe.utils.get_url()})
