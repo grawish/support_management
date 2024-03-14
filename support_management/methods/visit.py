@@ -220,7 +220,7 @@ def checkout_visit():
             visit.purposes[i].work_done = (
                 item.get("work_done") if item.get("work_done") else ""
             )
-            if item.get("serial_no") is not None:
+            if item.get("serial_no") is not None and item.get("serial_no") != "":
                 if item.get('custom_is_installation'):
                     print("isInstallation True")
                     visit.purposes[i].serial_no = create_serial_no(
