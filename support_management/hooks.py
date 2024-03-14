@@ -167,7 +167,7 @@ scheduler_events = {
     # 	],
     "cron": {
         "5 0 * * *": ["support_management.tasks.daily"],
-        "45 12 * * *": ["support_management.tasks.monthly"],
+        "0 13 * * *": ["support_management.tasks.monthly"],
     }
     # 	"hourly": [
     # 		"support_management.tasks.hourly"
