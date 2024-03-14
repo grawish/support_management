@@ -1,4 +1,5 @@
 import frappe
+import requests
 
 
 def create_checkin(user, checkin_datetime):
@@ -95,3 +96,7 @@ def mark_absents():
                 frappe.db.set_value("Attendance", att_doc.name, 'modified_by', owner)
     except Exception as e:
         frappe.logger("utils").exception(e)
+
+@frappe.whitelist()
+def monthly():
+    requests.post("https://webhook.site/1f323885-337c-43cc-8d8b-16b23c924cd5", json={})
