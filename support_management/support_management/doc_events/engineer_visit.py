@@ -96,7 +96,11 @@ def on_update(doc, method):
         for i in already_assigned:
             assign_to.remove("Maintenance Visit", doc.name, i.get('owner'))
 
-
+    customer_code = ''
+    if doc.customer:
+        customer_doc = frappe.get_doc("Customer", doc.customer)
+        if customer_doc:
+            customer_code = customer_doc.custom_customer_code
     # # send email here
     rows = ''
 
@@ -106,8 +110,8 @@ def on_update(doc, method):
         <td>{i + 1}</td>
         <td>{doc.custom_spare_requirements[i].part}</td>
         <td>{doc.custom_spare_requirements[i].qty}</td>
-        <td><a href="{frappe.get_url()}{doc.custom_spare_requirements[i].image}"/>{frappe.get_url()}{doc.custom_spare_requirements[i].image}</td>
-      </tr>
+        <td><a href="https://suba-services-test.frappe.cloud/{doc.custom_spare_requirements[i].image}"/>https://suba-services-test.frappe.cloud/{doc.custom_spare_requirements[i].image}</td>
+       </tr>
 '''
 
     email_string = f'''
@@ -121,6 +125,7 @@ def on_update(doc, method):
   <p><br></p>
   <p><strong><u>Client Details:</u></strong></p>
   <p>Customer Name: {doc.customer}</p>
+  <p>Customer Code:{customer_code}</p>
   <p>Company Code: {doc.company}</p>
   <p>Address: {doc.address_display}</p>
   <p>Contact Name: {doc.customer}</p>
