@@ -4,7 +4,9 @@ import frappe
 def create_checkin(user, checkin_datetime):
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
     already_checkin = frappe.db.get_value("Employee Checkin", {"employee": employee.get('name'), "log_type": "IN",
-                                                               "custom_date_only": checkin_datetime[:10]}, "name")
+                                                               "custom_date_only": checkin_datetime.date() if type(
+                                                                   checkin_datetime) != str else checkin_datetime[:10]},
+                                          "name")
     if already_checkin:
         return already_checkin
     checkin = frappe.new_doc("Employee Checkin")
@@ -18,10 +20,12 @@ def create_checkin(user, checkin_datetime):
 
 def create_checkout(user, checkout_datetime):
     employee = frappe.get_value("Employee", {"user_id": user}, ["name"], as_dict=True)
-    already_checkin = frappe.db.get_value("Employee Checkin", {"employee": employee.get('name'), "log_type": "OUT",
-                                                               "custom_date_only": checkout_datetime[:10]}, "name")
-    if already_checkin:
-        return already_checkin
+    already_checkout = frappe.db.get_value("Employee Checkin", {"employee": employee.get('name'), "log_type": "OUT",
+                                                               "custom_date_only": checkout_datetime.date() if type(
+                                                                   checkout_datetime) != str else checkout_datetime[
+                                                                                                  :10]}, "name")
+    if already_checkout:
+        return already_checkout
     checkout = frappe.new_doc("Employee Checkin")
     checkout.employee = employee.get('name')
     checkout.time = checkout_datetime
