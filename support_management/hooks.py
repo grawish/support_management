@@ -139,6 +139,9 @@ doc_events = {
     "Maintenance Visit": {
         "before_save": "support_management.support_management.doc_events.engineer_visit.before_save",
         "on_update": "support_management.support_management.doc_events.engineer_visit.on_update"
+    },
+    "Employee Checkin": {
+        "before_save": "support_management.support_management.doc_events.employee_checkin.before_save",
     }
     #     "Attendance": {
     #         "before_submit": "support_management.support_management.attendance.validate",
@@ -151,10 +154,9 @@ doc_events = {
 }
 
 fixtures = [
-  
     {
         "doctype": "Print Format",
-        "filters": [["Print Format","module","=","Support Management"]]
+        "filters": [["Print Format", "module", "=", "Support Management"]]
     },
 ]
 
