@@ -69,7 +69,7 @@ def on_update(doc, method):
                     assigned_by="Administrator",
                     assigned_by_full_name="Administrator",
                     description=doc.name,
-                    notify=True,
+                    notify=True
                 ),
                 ignore_permissions=True,
             )
